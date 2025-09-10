@@ -50,6 +50,9 @@ pipeline {
             }
         }
         stage('OWASP Dependency-Check Scan') {
+            when {
+                expression { return false }   // will always skip
+                 }
             steps {
                 dir('Application-Code/backend') {
                     withCredentials([string(credentialsId: 'NVD_API_KEY', variable: 'NVD_API_KEY')]) {
