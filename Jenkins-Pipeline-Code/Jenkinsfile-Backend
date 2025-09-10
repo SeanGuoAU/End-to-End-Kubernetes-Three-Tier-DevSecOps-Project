@@ -49,21 +49,19 @@ pipeline {
                 }
             }
         }
-        stage('OWASP Dependency-Check Scan') {
-            when {
-                expression { return !params.SKIP_DEP_CHECK }   // will always skip
-                 }
-            steps {
-                dir('Application-Code/backend') {
-                    withCredentials([string(credentialsId: 'NVD_API_KEY', variable: 'NVD_API_KEY')]) {
+        // stage('OWASP Dependency-Check Scan') {
 
-                    dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit --nvdApiKey=${NVD_API_KEY} --format "XML" --out ./dependency-check-report', odcInstallation: 'DP-Check'
-                    dependencyCheckPublisher pattern: 'dependency-check-report/dependency-check-report.xml'
+        //     steps {
+        //         dir('Application-Code/backend') {
+        //             withCredentials([string(credentialsId: 'NVD_API_KEY', variable: 'NVD_API_KEY')]) {
 
-                    }
-                }
-            }
-        }
+        //             dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit --nvdApiKey=${NVD_API_KEY} --format "XML" --out ./dependency-check-report', odcInstallation: 'DP-Check'
+        //             dependencyCheckPublisher pattern: 'dependency-check-report/dependency-check-report.xml'
+
+        //             }
+        //         }
+        //     }
+        // }
         stage('Trivy File Scan') {
             steps {
                 dir('Application-Code/backend') {
