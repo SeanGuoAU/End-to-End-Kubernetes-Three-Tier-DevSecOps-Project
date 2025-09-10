@@ -10,6 +10,7 @@ pipeline {
         AWS_ECR_REPO_NAME = credentials('ECR_REPO2')
         AWS_DEFAULT_REGION = 'ap-southeast-2'
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/"
+        NVD_API_KEY = credentials('NVD_API_KEY')
     }
     stages {
         stage('Cleaning Workspace') {
@@ -39,7 +40,7 @@ pipeline {
                     // wait for SonarQube analysis to finish and fail pipeline if quality gate fails
                     timeout(time: 10, unit: 'MINUTES') {
                         sleep(time: 10, unit: 'SECONDS')
-                        def qg = waitForQualityGate(abortPipeline: true, credentialsId: 'sonar-token' )
+                        def qg = waitForQualityGate(abortPipeline: true)
                         echo "Quality Gate status: ${qg.status}"
                     }
                 }
@@ -48,7 +49,7 @@ pipeline {
         stage('OWASP Dependency-Check Scan') {
             steps {
                 dir('Application-Code/backend') {
-                    dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+                    dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit --nvdApiKey ${NVD_API_KEY}', odcInstallation: 'DP-Check'
                     dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
                 }
             }
