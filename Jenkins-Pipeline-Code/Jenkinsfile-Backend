@@ -51,7 +51,7 @@ pipeline {
         }
         stage('OWASP Dependency-Check Scan') {
             when {
-                expression { return false }   // will always skip
+                expression { return !params.SKIP_DEP_CHECK }   // will always skip
                  }
             steps {
                 dir('Application-Code/backend') {
