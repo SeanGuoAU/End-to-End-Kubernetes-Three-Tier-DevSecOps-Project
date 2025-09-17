@@ -25,11 +25,7 @@ spec:
       - name: ecr-registry-secret
       containers:
       - name: api
-<<<<<<< HEAD
         image: 715227881960.dkr.ecr.ap-southeast-2.amazonaws.com/backend:21
-=======
-        image: 407622020962.dkr.ecr.ap-southeast-2.amazonaws.com/backend:22
->>>>>>> 12e15c52b9108e18cb561da1186f4a2f90add916
         imagePullPolicy: Always
         env:
           - name: MONGO_CONN_STR
