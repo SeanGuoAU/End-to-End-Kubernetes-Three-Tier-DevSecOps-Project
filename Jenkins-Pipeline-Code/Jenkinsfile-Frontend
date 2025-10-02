@@ -19,8 +19,13 @@ pipeline {
         }
         stage('Checkout from Git') {
             steps {
-                git credentialsId: 'GITHUB', url: 'https://github.com/SeanGuoAU/End-to-End-Kubernetes-Three-Tier-DevSecOps-Project.git'
-            }
+        script {
+            timeout(time: 5, unit: 'MINUTES') {
+                def qg = waitForQualityGate(abortPipeline: true)
+                echo "Quality Gate status: ${qg.status}"
+                }
+            }            
+        }
         }
         stage('Sonarqube Analysis') {
             steps {
